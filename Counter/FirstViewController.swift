@@ -12,19 +12,12 @@ class FirstViewController: UIViewController {
 
     @IBOutlet weak var counterLabel: UILabel!
     
-    var currentCount: Int = 0 {
-        didSet {
-            if (currentCount < 0) {
-                currentCount = 0
-            }
-            self.counterLabel.text = String(currentCount)
-        }
-    }
+    let eventDataService = EventDataService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "increaseCount")
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "addEvent")
         self.view.addGestureRecognizer(tapGestureRecognizer)
         
         let clearCountGestureRecognizerLeft = UISwipeGestureRecognizer(target: self, action: "clearCount")
@@ -48,17 +41,24 @@ class FirstViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func updateCountLabel () {
+        self.counterLabel.text = String(eventDataService.eventCount())
+    }
 
-    func increaseCount () {
-        currentCount++
+    func addEvent () {
+        eventDataService.addEvent()
+        self.updateCountLabel()
     }
 
     func clearCount () {
-        currentCount = 0
+        eventDataService.clearEvents()
+        self.updateCountLabel()
     }
     
     func decreaseCount () {
-        currentCount--
+        eventDataService.removeEvent()
+        self.updateCountLabel()
     }
 }
 
